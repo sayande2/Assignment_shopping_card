@@ -1,0 +1,89 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Shopping App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyBagPage(),
+    );
+  }
+}
+
+class MyBagPage extends StatefulWidget {
+  @override
+  _MyBagPageState createState() => _MyBagPageState();
+}
+
+class _MyBagPageState extends State<MyBagPage> {
+  final List<Map<String, dynamic>> _items = [
+    {'name': 'Pullover', 'color': 'Black', 'size': 'L', 'price': 51},
+    {'name': 'T-Shirt', 'color': 'Gray', 'size': 'L', 'price': 30},
+    {'name': 'Sport Dress', 'color': 'Black', 'size': 'M', 'price': 43},
+  ];
+double _totalAmount() {
+    return _items.fold(0, (sum, item) => sum + item['price']);
+  }
+
+  void _showCongratulationsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Congratulations!'),
+          content: Text('You have added 5 T-shirts to your bag!'),
+          actions: <Widget>[
+            ElevatedButton(
+              child: Text('OKAY'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('My Bag'),
+        ),
+        body: ListView.builder(
+          itemCount: _items.length,
+          itemBuilder: (context, index) {
+            final item = _items[index];
+            return ListTile(
+              title: Text(item['name']),
+              subtitle: Text('Color: ${item['color']}   Size: ${item['size']}'),
+              trailing: Text('\$${item['price']}'),
+            );
+          },
+        ),
+        bottomNavigationBar: BottomAppBar(
+            child: Container(
+              height: 50.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Total amount: \$${_totalAmount()}'),
+                  SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: _showCongratulationsDialog,
+                    child: Text('CHECK OUT'),
+                  ),
+                ],
+              ),
+            ),
+            ),
+        );
+    }
+}
